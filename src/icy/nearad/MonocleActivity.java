@@ -7,6 +7,10 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.AttributeSet;
 
+/**
+ * 透明立体
+ * @author icy
+ */
 public class MonocleActivity extends Activity {
 	private GLSurfaceView mGlSurfaceView;
 	
@@ -21,19 +25,7 @@ public class MonocleActivity extends Activity {
         setContentView(mGlSurfaceView);
         
 	}
-	/*private class MyGLSurfaceClass extends GLSurfaceView {
-
-		public MyGLSurfaceClass(Context context) {
-			super(context);
-			// TODO Auto-generated constructor stub
-		}
-		
-		public MyGLSurfaceClass(Context context, AttributeSet attrs) {
-			super(context, attrs);
-			// TODO Auto-generated constructor stub
-		}
-		
-	}*/
+	
 	@Override
     protected void onResume() {
         super.onResume();

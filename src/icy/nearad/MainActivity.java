@@ -69,9 +69,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Se
 		//event.values[0];  方向角:正北0，正西270
 		//event.values[1]   倾斜角
 		//event.values[2]   旋转角
-		//根据角度不断重绘
+		//根据角度不断重绘,相差+-30°以内
+	    SquareRender.directAngle = (int)event.values[0];
 		if (Math.abs(event.values[0] - lastDirection) > 10) {//超过10°刷新一下
-			//
+			lastDirection = event.values[0];
 		}
 	}
 	
@@ -79,7 +80,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Se
 		if (Math.abs(mobileDirect - adDirect) > 30) {
 			return false;
 		}
-		//负的显示在左边，正的显示在右边
+		//小的显示在左边，大的显示在右边
 		return false;
 	}
 	

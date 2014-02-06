@@ -9,11 +9,13 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 public class SquareRender implements GLSurfaceView.Renderer {
+    static int directAngle;
 	static int one = 0x10000;
 	private IntBuffer squareBuffer;
-	
+	//不是改变这个是改变translate
 	private int[] square = new int[] {
 			one, one,  0,
 			-one, one, 0,
@@ -21,6 +23,8 @@ public class SquareRender implements GLSurfaceView.Renderer {
 			-one, -one, 0
 	};
 	private float rotateQuad;
+	private float axisY = -9;
+	private float axisZ = -6;
 	/*private float[] vertices = {
             -1.0f, 1.0f, 0.0f, // 0, Top Left
             -1.0f, -1.0f, 0.0f, // 1, Bottom Left
@@ -59,12 +63,26 @@ public class SquareRender implements GLSurfaceView.Renderer {
         gl.glLoadIdentity();
         
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+        
+        //gl.glRotatef(rotateQuad, 1.0f, 0.0f, 0.0f);
         gl.glTranslatef(0.0f, 0.0f, -6.0f);
-        gl.glRotatef(rotateQuad, 1.0f, 0.0f, 0.0f);
         gl.glVertexPointer(3, GL10.GL_FIXED, 0, squareBuffer);
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
-        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
         
+        for (int i = 0; i < SplashCover.degreeList.size(); i++) {
+            int delta = (int) (SplashCover.degreeList.get(i) - directAngle);
+            if (Math.abs(delta) < 40) {//决定要显示
+                axisZ = (float) (-6 - SplashCover.distanceList.get(i));
+                Log.e("", "axisZ: " + axisZ);
+                gl.glLoadIdentity(); 
+                gl.glTranslatef(delta/10*3, axisY, axisZ);
+                gl.glVertexPointer(3, GL10.GL_FIXED, 0, squareBuffer);
+                gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
+                axisY += 3;
+            }
+        }
+        axisY = -9;
+        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
         rotateQuad += 0.5f;
 	}
 
