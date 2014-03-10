@@ -3,5 +3,13 @@
     
     <drawable name="translucent_background">#e0000000</drawable>
     <drawable name="transparent_background">#00000000</drawable>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="d500">#e0d6fbfc</color>
+    <color name="d1000">#e0a4f8f9</color>
+    <color name="d1500">#e07aeef0</color>
+    <color name="d2000">#e059e4e6</color>
+    <color name="d2500">#e044d5d7</color>
+    <color name="d3000">#e027bbbd</color>
     
 </resources>
