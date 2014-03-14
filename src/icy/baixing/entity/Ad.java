@@ -21,6 +21,15 @@ public class Ad implements Serializable{
 	public boolean hasBuySuperUrgent;
 	public boolean hasBuyUrgent;
 	public boolean hasBuyDing;
+	private double degree;
+	
+	public void setDegree(double degree) {
+		this.degree = degree;
+	}
+	
+	public double getDegree() {
+		return this.degree;
+	}
 	
 	public enum EDATAKEYS{
 		EDATAKEYS_LICENCE("bindBusinessLicence"),

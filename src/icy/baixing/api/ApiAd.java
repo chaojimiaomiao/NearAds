@@ -91,11 +91,11 @@ public class ApiAd{
 		params.addAll(coordinates);
 		params.addParam("size", size);
 		params.addParam("from", 0);
-		//Log.e("getAdsByGraph", params.toString());
+		Log.e("getAdsByGraph", params.toString());
 		BaseApiCommand.createCommand(apiName, true, params).execute(ctx, new Api(cb, new JsonHandler(){
 			@Override
 			public Object processJson(String json) {
-				Log.e("getAdsByGraph", "json: " + json);
+				//Log.e("getAdsByGraph", "json: " + json);
 				return JsonUtil.getGoodsListFromJsonByJackson(json);
 			}
 		}));

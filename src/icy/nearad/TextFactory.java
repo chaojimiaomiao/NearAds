@@ -18,17 +18,17 @@ import android.widget.TextView;
 public class TextFactory {
     private ArrayList<Integer> distanceList;
     private ArrayList<Ad> adList;
-    private DisComparator disComparator;
+    //private DisComparator disComparator;
     private Context context;
 
     public TextFactory(Context context) {
-        disComparator = new DisComparator();
+        //disComparator = new DisComparator();
         this.context = context;
     }
     
     public ArrayList<ViewWithDegree> setAds(ArrayList<Ad> ads) {
         this.adList = ads;
-        Collections.sort(adList, disComparator);//按距离排过序的ad
+        Collections.sort(adList, distanceComparator);//按距离排过序的ad
         ArrayList<ViewWithDegree> list = generateText();
         return list;
     }
@@ -47,20 +47,22 @@ public class TextFactory {
 			
 		}
 	}
+    //已排序过的adlist
     private ArrayList<ViewWithDegree> generateText() {
         ArrayList<ViewWithDegree> dTextViews = new ArrayList<ViewWithDegree>();
         for (int i=0; i<adList.size(); i++) {
+        	Ad detail = adList.get(i);
         	LinearLayout linearLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.item_textview, null);
         	TextView textView = (TextView)linearLayout.findViewById(R.id.id_ad_title);
         	//判断linearlayout的背景框,超过1500白线条,低于则黑线条
         	//判断textColor同上
         	//判断text的background，则要每隔500判断一个
-        	judgeTextColor(linearLayout, textView, adList.get(i).getDistance());
+        	judgeTextColor(linearLayout, textView, detail.getDistance());
             textView.setPadding(10, 10, 10, 10);
-            String string = String.valueOf(adList.get(i).getDistance()) + "\n";
-            textView.setText(string + adList.get(i).getValueByKey(EDATAKEYS.EDATAKEYS_TITLE));
+            String string = String.valueOf(detail.getDegree()) + "\n";
+            textView.setText(string + detail.getValueByKey(EDATAKEYS.EDATAKEYS_TITLE));
             ViewWithDegree viewWithDegree = new ViewWithDegree();
-            viewWithDegree.degree = calculateDegree(adList.get(i));
+            viewWithDegree.degree = detail.getDegree();//calculateDegree(adList.get(i));
             viewWithDegree.textView = textView;
             viewWithDegree.view = (View) linearLayout;
             dTextViews.add(viewWithDegree);
@@ -72,41 +74,41 @@ public class TextFactory {
     	linearLayout.setBackgroundResource(R.drawable.white_text_bg);
     	textView.setTextColor(context.getResources().getColor(R.color.white));
     	if (distance <= 500) {
-    		textView.setBackgroundColor(0xee111111);//context.getResources().getColor(R.color.d500)
+    		textView.setBackgroundColor(0xe0111111);//context.getResources().getColor(R.color.d500)
     		return;
         } else if (distance <= 800) {
-        	textView.setBackgroundColor(0xee181818);
+        	textView.setBackgroundColor(0xe0181818);
         	return;
 		} else if (distance <= 1000) {
-        	textView.setBackgroundColor(0xee222222);
+        	textView.setBackgroundColor(0xe0222222);
         	return;
         } else if (distance <= 1200) {
-        	textView.setBackgroundColor(0xee292929);
+        	textView.setBackgroundColor(0xe0292929);
         	return;
 		} else if (distance <= 1500) {
-        	textView.setBackgroundColor(0xee333333);
+        	textView.setBackgroundColor(0xe0333333);
         	return;
         } else if (distance <= 1800) {
-        	textView.setBackgroundColor(0xee393939);
+        	textView.setBackgroundColor(0xe0393939);
         	return;
         }
     	linearLayout.setBackgroundResource(R.drawable.black_text_bg);
     	textView.setTextColor(context.getResources().getColor(R.color.black));
     	if (distance <= 2000) {
-    		textView.setBackgroundColor(0xee444444);
+    		textView.setBackgroundColor(0xe0444444);
     		return;
         } else if (distance <= 2300) {
-        	textView.setBackgroundColor(0xee484848);
+        	textView.setBackgroundColor(0xe0484848);
         	return;
         } else if (distance <= 2500) {
-        	textView.setBackgroundColor(0xee515151);
+        	textView.setBackgroundColor(0xe0515151);
         	return;
         } else {
-        	textView.setBackgroundColor(0xee555555);
+        	textView.setBackgroundColor(0xe0555555);
         	return;
         }
 	}
-    private double calculateDegree(Ad ad) {
+/*    private double calculateDegree(Ad ad) {
     	double adLat = Double.parseDouble(ad.getValueByKey(EDATAKEYS.EDATAKEYS_LAT));
 		double adLon = Double.parseDouble(ad.getValueByKey(EDATAKEYS.EDATAKEYS_LON));
 		double degree = Math.atan2(adLon - SplashCover.getLng(), adLat - SplashCover.getLat()) * 180 / Math.PI;
@@ -121,7 +123,7 @@ public class TextFactory {
 		}
 		return adDegree;//与北方的夹角,和传感器一致
 	}
-    
+    */
     private int colorResource(double distance) {
         if (distance <= 500) {
             return context.getResources().getColor(R.color.d500);
@@ -138,6 +140,19 @@ public class TextFactory {
         }
     }
     
+    static Comparator<Ad> distanceComparator = new Comparator<Ad>() {
+
+		@Override
+		public int compare(Ad lhs, Ad rhs) {
+			if (lhs.getDistance() < rhs.getDistance()) {
+				return 1;
+			} else if (lhs.getDistance() > rhs.getDistance()) {
+				return -1;
+			}
+			return 0;
+		}
+	};
+    /*
     private class DisComparator implements Comparator<Ad> {
 
         @Override
@@ -152,5 +167,5 @@ public class TextFactory {
                 return 1;
             }
         }
-    }
+    }*/
 }
