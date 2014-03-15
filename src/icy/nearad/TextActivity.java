@@ -15,6 +15,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -62,14 +63,13 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 		}
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);  
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        //drawTexts(100);
 	}
 	@Override  
     protected void onPause() {
         super.onPause();  
         sensorManager.unregisterListener(this);
     }
-	@Override  
+	@Override
     protected void onResume() {
         super.onResume();  
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);  
@@ -78,32 +78,27 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 	double dHeight, dWidth;
 	double coverDegree = 30;
 	private void drawTexts(double nowDirect) {
+		Log.e("", "nowDirect: " + nowDirect);
 		textsParent.removeAllViews();
-		/*TextView textView = new TextView(this);
-        //textView.setBackgroundResource(R.drawable.white_text_bg);
-        textView.setBackgroundColor(getResources().getColor(R.color.d500));
-        textView.setPadding(10, 10, 10, 10);
-        textView.setText("为什么画不出来？");
-        LayoutParams relativeParams  = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        relativeParams.topMargin = 100;
-		relativeParams.leftMargin = 100;
-		textView.setLayoutParams(relativeParams);
-		textsParent.addView(textView);*/
+		textsParent.invalidate();
 		//给left加小范围random，不至于那么呆板
 		for (int i = 0; i < degreeList.size(); i++) {
 			double degree = degreeList.get(i);
 			View viewParent = views.get(i);
 			double delta = degree - nowDirect;
-			LayoutParams relativeParams = new RelativeLayout.LayoutParams(200, LayoutParams.WRAP_CONTENT);
+			LayoutParams relativeParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			if (delta >=0 && delta <= coverDegree) {//画在右边
+				Log.e("左边", "delta: " + delta);
 				relativeParams.topMargin = (int)(Math.random() * 400);
 				relativeParams.leftMargin = (int)(dWidth/2 + dWidth/2 * delta/coverDegree + Math.random()*100 - 50);
 				
 			} else if (delta >=-coverDegree && delta < 0) {//画左边
+				Log.e("右边", "delta: " + delta);
 				relativeParams.topMargin = (int)(Math.random() * 400);
 				relativeParams.leftMargin = (int)(dWidth/2 - dWidth/2 * Math.abs(delta)/coverDegree + Math.random()*100 - 50);
 			}
 			viewParent.setLayoutParams(relativeParams);
+			viewParent.setMinimumHeight(100);
 			textsParent.addView(viewParent);
 		}
 		/*for (int i = 0; i < degreeList.size(); i++) {
