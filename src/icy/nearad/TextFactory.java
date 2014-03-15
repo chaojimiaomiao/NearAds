@@ -6,10 +6,9 @@ import icy.baixing.entity.Ad.EDATAKEYS;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Map;
-import java.util.zip.Inflater;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -55,7 +54,8 @@ public class TextFactory {
         	//判断linearlayout的背景框,超过1500白线条,低于则黑线条
         	//判断textColor同上
         	//判断text的background，则要每隔500判断一个
-        	judgeTextColor(linearLayout, textView, adList.get(i).getDistance());
+        	//judgeTextColor(linearLayout, textView, adList.get(i).getDistance());
+        	setTextColor(textView, adList.get(i).getDistance());
             textView.setPadding(10, 10, 10, 10);
             String string = String.valueOf(adList.get(i).getDistance()) + "\n";
             textView.setText(string + adList.get(i).getValueByKey(EDATAKEYS.EDATAKEYS_TITLE));
@@ -67,6 +67,16 @@ public class TextFactory {
         }
         return dTextViews;
     }
+    
+    private void setTextColor(TextView textView, double distance) {
+		int r=59, g=168, b=26;
+		int k = ((int)distance)/10000 + 1;
+		r= r * k;
+		g= g * k;
+		b= b * k;
+		textView.setBackgroundColor(Color.argb(160, r, g, b));
+		textView.setTextColor(context.getResources().getColor(R.color.black));
+	}
     
     private void judgeTextColor(LinearLayout linearLayout, TextView textView, double distance) {
     	linearLayout.setBackgroundResource(R.drawable.white_text_bg);

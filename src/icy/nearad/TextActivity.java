@@ -1,7 +1,6 @@
 package icy.nearad;
 
 import icy.baixing.entity.Ad;
-import icy.baixing.entity.Ad.EDATAKEYS;
 import icy.nearad.TextFactory.ViewWithDegree;
 
 import java.io.IOException;
@@ -20,7 +19,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
