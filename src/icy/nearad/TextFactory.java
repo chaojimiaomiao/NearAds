@@ -9,8 +9,10 @@ import java.util.Comparator;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +42,7 @@ public class TextFactory {
     	double degree;
     	TextView textView;
     	View view;
+    	int topMargin;
     }
     public void draw(ArrayList<ViewWithDegree> lists, View parent) {
 		for (int i = 0; i < lists.size(); i++) {
@@ -59,24 +62,33 @@ public class TextFactory {
         	//judgeTextColor(linearLayout, textView, detail.getDistance());
         	setTextColor(textView, detail.getDistance());
             textView.setPadding(10, 10, 10, 10);
-            String string = String.valueOf(detail.getDegree()) + "\n";
+            String string = "";//String.valueOf(detail.getDistance() + "  " + detail.getDegree()) + "\n";
             textView.setText(string + detail.getValueByKey(EDATAKEYS.EDATAKEYS_TITLE));
+            textView.setMaxWidth(260);
+            if (textView.getLineCount() > 3) {
+				textView.setMaxWidth(320);
+				textView.setMaxLines(4);
+			}
+            //textView.measure(MeasureSpec., heightMeasureSpec)
             ViewWithDegree viewWithDegree = new ViewWithDegree();
             viewWithDegree.degree = detail.getDegree();//calculateDegree(adList.get(i));
             viewWithDegree.textView = textView;
             viewWithDegree.view = (View) linearLayout;
+            viewWithDegree.topMargin = detail.getTopMargin();
             dTextViews.add(viewWithDegree);
         }
         return dTextViews;
     }
     
     private void setTextColor(TextView textView, double distance) {
-		int r=59, g=168, b=26;
-		int k = ((int)distance)/10000 + 1;
-		r= r * k;
-		g= g * k;
-		b= b * k;
-		textView.setBackgroundColor(Color.argb(160, r, g, b));
+		int r=89, g=168, b=66, a=240;//g168  a远的淡k越大越小
+		double k = distance/3000 + 1;
+		//Log.e("", "系数k: " + k); 
+		a = (int) (a - k * 20); if (a >255) { a = 255;}
+		r= (int) (r * k);
+		//g= (int) (g * k); if(g > 255) {g=255;Log.e("", "has more 255");}
+		b= (int) (b * k);
+		textView.setBackgroundColor(Color.argb(a, r, g, b));
 		textView.setTextColor(context.getResources().getColor(R.color.black));
 	}
     

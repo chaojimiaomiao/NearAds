@@ -22,11 +22,18 @@ public class Ad implements Serializable{
 	public boolean hasBuyUrgent;
 	public boolean hasBuyDing;
 	private double degree;
+	private int topMargin;
+	
+	public void setTopMargin(int margin) {
+		this.topMargin = margin;
+	}
+	public int getTopMargin() {
+		return this.topMargin;
+	}
 	
 	public void setDegree(double degree) {
 		this.degree = degree;
 	}
-	
 	public double getDegree() {
 		return this.degree;
 	}
