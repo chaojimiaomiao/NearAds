@@ -10,11 +10,16 @@ import java.util.Comparator;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TextFactory {
     private ArrayList<Integer> distanceList;
@@ -53,17 +58,39 @@ public class TextFactory {
     private ArrayList<ViewWithDegree> generateText() {
         ArrayList<ViewWithDegree> dTextViews = new ArrayList<ViewWithDegree>();
         for (int i=0; i<adList.size(); i++) {
-        	Ad detail = adList.get(i);
-        	LinearLayout linearLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.item_textview, null);
+        	final Ad detail = adList.get(i);
+        	final LinearLayout linearLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.item_textview, null);
+        	TextView distanceView = (TextView) linearLayout.findViewById(R.id.id_ad_distance);
         	TextView textView = (TextView)linearLayout.findViewById(R.id.id_ad_title);
+        	linearLayout.setOnTouchListener(new View.OnTouchListener() {
+				
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					LinearLayout locationHintView = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.popup_window, null);
+					String location = detail.getValueByKey("具体地点");
+					if (location == null) {
+						location = "";
+					}
+					Toast.makeText(context, "具体地点：" + location, Toast.LENGTH_SHORT).show();
+					((TextView)locationHintView.findViewById(R.id.id_pop_distance)).setText("具体地点：" + location);
+					PopupWindow popupWindow = new PopupWindow(locationHintView, LayoutParams.WRAP_CONTENT,  
+				            LayoutParams.WRAP_CONTENT);
+					//popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, 100, 100);
+					popupWindow.showAsDropDown(v);
+					popupWindow.setOutsideTouchable(true); 
+					return false;
+				}
+			});
+        	
         	//判断linearlayout的背景框,超过1500白线条,低于则黑线条
         	//判断textColor同上
         	//判断text的background，则要每隔500判断一个
         	//judgeTextColor(linearLayout, textView, detail.getDistance());
+        	String string = String.valueOf((int)detail.getDistance() + "米");
+        	distanceView.setText(string);
         	setTextColor(textView, detail.getDistance());
             textView.setPadding(10, 10, 10, 10);
-            String string = "";//String.valueOf(detail.getDistance() + "  " + detail.getDegree()) + "\n";
-            textView.setText(string + detail.getValueByKey(EDATAKEYS.EDATAKEYS_TITLE));
+            textView.setText(detail.getValueByKey(EDATAKEYS.EDATAKEYS_TITLE));
             textView.setMaxWidth(260);
             if (textView.getLineCount() > 3) {
 				textView.setMaxWidth(320);
