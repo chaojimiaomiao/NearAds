@@ -62,7 +62,7 @@ public class TextFactory {
         	//judgeTextColor(linearLayout, textView, detail.getDistance());
         	setTextColor(textView, detail.getDistance());
             textView.setPadding(10, 10, 10, 10);
-            String string = "";//String.valueOf(detail.getDistance() + "  " + detail.getDegree()) + "\n";
+            String string = String.valueOf(detail.getDistance() + "\n");
             textView.setText(string + detail.getValueByKey(EDATAKEYS.EDATAKEYS_TITLE));
             textView.setMaxWidth(260);
             if (textView.getLineCount() > 3) {
@@ -83,10 +83,8 @@ public class TextFactory {
     private void setTextColor(TextView textView, double distance) {
 		int r=89, g=168, b=66, a=240;//g168  a远的淡k越大越小
 		double k = distance/3000 + 1;
-		//Log.e("", "系数k: " + k); 
 		a = (int) (a - k * 20); if (a >255) { a = 255;}
 		r= (int) (r * k);
-		//g= (int) (g * k); if(g > 255) {g=255;Log.e("", "has more 255");}
 		b= (int) (b * k);
 		textView.setBackgroundColor(Color.argb(a, r, g, b));
 		textView.setTextColor(context.getResources().getColor(R.color.black));
