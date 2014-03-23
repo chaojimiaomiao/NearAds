@@ -22,7 +22,7 @@
         android:alpha="0.6"
         android:id="@+id/id_monocle"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/monocle"
+        android:background="@drawable/add_minus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
