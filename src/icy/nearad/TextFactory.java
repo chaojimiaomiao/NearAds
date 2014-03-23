@@ -9,6 +9,7 @@ import java.util.Comparator;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -71,13 +72,14 @@ public class TextFactory {
 					if (location == null) {
 						location = "";
 					}
-					Toast.makeText(context, "具体地点：" + location, Toast.LENGTH_SHORT).show();
+					//Toast.makeText(context, "具体地点：" + location, Toast.LENGTH_SHORT).show();
 					((TextView)locationHintView.findViewById(R.id.id_pop_distance)).setText("具体地点：" + location);
 					PopupWindow popupWindow = new PopupWindow(locationHintView, LayoutParams.WRAP_CONTENT,  
 				            LayoutParams.WRAP_CONTENT);
 					//popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, 100, 100);
-					popupWindow.showAsDropDown(v);
+					popupWindow.setBackgroundDrawable(new BitmapDrawable());
 					popupWindow.setOutsideTouchable(true); 
+					popupWindow.showAsDropDown(v);
 					return false;
 				}
 			});

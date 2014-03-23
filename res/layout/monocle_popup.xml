@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/black_text_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="right"
+    android:gravity="right"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/id_dis1000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="附近1000米"
+        android:padding="2dp"
+        />
+    <include layout="@layout/line"/>
+    
+    <TextView 
+        android:id="@+id/id_dis2000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="附近2000米"
+        android:padding="2dp"
+        />
+    <include layout="@layout/line"/>
+    
+    <TextView 
+        android:id="@+id/id_dis3000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="附近3000米"
+        android:padding="2dp"
+        />
+    <include layout="@layout/line"/>
+    
+    <TextView 
+        android:id="@+id/id_dis5000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="附近5000米"
+        android:padding="2dp"
+        />
+    <include layout="@layout/line"/>
+    
+    <TextView 
+        android:id="@+id/id_dis10000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="附近1公里"
+        android:padding="2dp"
+        />
+
+</LinearLayout>
