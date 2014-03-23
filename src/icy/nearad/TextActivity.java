@@ -99,7 +99,7 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 			} else if (delta >=-coverDegree && delta < 0) {//画左边
 				relativeParams.leftMargin = (int)(dWidth/2 - dWidth/2 * Math.abs(delta)/coverDegree + Math.random()*100 - 50);
 			}*/
-			Log.e("", "nowdirect: " + nowDirect + "   delta: " + delta);
+			//Log.e("", "nowdirect: " + nowDirect + "   delta: " + delta);
 			if (delta >=0 && delta <= coverDegree) {//反一下
 				relativeParams.leftMargin = (int)(dWidth/2 - dWidth/2 * Math.abs(delta)/coverDegree + Math.random()*100 - 50);
 			} else if (delta >=-coverDegree && delta < 0) {

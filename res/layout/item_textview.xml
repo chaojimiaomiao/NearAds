@@ -8,6 +8,15 @@
     android:orientation="vertical" >
     
     <TextView 
+        android:id="@+id/id_ad_distance"
+        android:text="距你500米"
+        android:textColor="#FA9A5B"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+    />
+    
+    <TextView 
         android:id="@+id/id_ad_title"
         android:text="标题"
         android:textColor="@android:color/black"
