@@ -3,6 +3,8 @@
     
     <drawable name="translucent_background">#e0000000</drawable>
     <drawable name="transparent_background">#00000000</drawable>
+    <color name="orange">#fa965a</color>
+    <drawable name="white_d">#ffffff</drawable>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="d500">#e0d6fbfc</color>

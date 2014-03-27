@@ -31,10 +31,11 @@ import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 public class TextActivity extends Activity implements SurfaceHolder.Callback, SensorEventListener {
-	private ImageView monocleView;
+	private ImageView addView, minusView;
 	private RelativeLayout textsParent;
 	private TextFactory factory;
 	private ArrayList<Ad> adList;
@@ -43,9 +44,11 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 	private ArrayList<Double> degreeList;//与textview按顺序距离对应
 	private ArrayList<Integer> marginList;
 	double lastDirection;
-	int nowMaxDistance = 5000;
+	private PopupWindow window;
+	int nowMaxDistance = 3000;
 	SensorManager sensorManager;
 	Sensor sensor;
+	private boolean isDrawing;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,20 +81,31 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);  
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         
-        monocleView = (ImageView)findViewById(R.id.id_monocle);
-        monocleView.setOnClickListener(new View.OnClickListener() {
+        addView = (ImageView)findViewById(R.id.id_monocle_add);
+        addView.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
-				PopupWindow window = new PopupWindow(200, LinearLayout.LayoutParams.WRAP_CONTENT);
-				View contentView = LayoutInflater.from(TextActivity.this).inflate(R.layout.monocle_popup, null);
-				window.setContentView(contentView);
-				window.setBackgroundDrawable(new BitmapDrawable());
-				window.setOutsideTouchable(true);
-				window.showAtLocation(arg0, Gravity.BOTTOM | Gravity.LEFT, -20, 0);
-				setListener(contentView);
+				if (nowMaxDistance < 5000) {
+					Toast.makeText(TextActivity.this, nowMaxDistance + 1000 + "米", Toast.LENGTH_SHORT).show();
+					refreshView(nowMaxDistance + 1000);
+				} else {
+					Toast.makeText(TextActivity.this, "已经是最大距离", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
+        minusView = (ImageView)findViewById(R.id.id_monocle_minus);
+        minusView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (nowMaxDistance > 1000) {
+					Toast.makeText(TextActivity.this, nowMaxDistance - 1000 + "米", Toast.LENGTH_SHORT).show();
+					refreshView(nowMaxDistance - 1000);
+				} else {
+					Toast.makeText(TextActivity.this, "已经是最短距离", Toast.LENGTH_SHORT).show();
+				}
+			}
+        });
 	}
 	private void refreshView(int maxDis) {
 		nowMaxDistance = maxDis;
@@ -103,13 +117,17 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 		monocle.findViewById(R.id.id_dis2000).setOnClickListener(clickListener);
 		monocle.findViewById(R.id.id_dis3000).setOnClickListener(clickListener);
 		monocle.findViewById(R.id.id_dis5000).setOnClickListener(clickListener);
-		monocle.findViewById(R.id.id_dis10000).setOnClickListener(clickListener);
+		//monocle.findViewById(R.id.id_dis10000).setOnClickListener(clickListener);
 	}
 
 	View.OnClickListener clickListener = new View.OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
+			((TextView)v).setTextColor(getResources().getColor(R.color.orange));
+			if (window != null && window.isShowing()) {
+				window.dismiss();
+			}
 			switch (v.getId()) {
 			case R.id.id_dis1000:
 				refreshView(1000);
@@ -122,9 +140,6 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 				break;
 			case R.id.id_dis5000:
 				refreshView(5000);
-				break;
-			case R.id.id_dis10000:
-				refreshView(10000);
 				break;
 			}
 		}
@@ -141,14 +156,17 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);  
     }
 	
-	double dHeight, dWidth;
+	public static double dHeight, dWidth;
 	double coverDegree = 30;
 	private void drawTexts(double nowDirect) {
+		if (isDrawing) {
+			return;
+		}
 		textsParent.removeAllViews();
 		textsParent.invalidate();
 		//给left加小范围random，不至于那么呆板
 		for (int i = 0; i < degreeList.size(); i++) {
-			if (adList.get(i).getDistance() > nowMaxDistance) {
+			if (adList.get(i).getDistance() > nowMaxDistance ) {//|| adList.get(i).getDistance() < (nowMaxDistance - 300)
 				continue;
 			}
 			double degree = degreeList.get(i);
@@ -167,6 +185,7 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 			viewParent.setLayoutParams(relativeParams);
 			textsParent.addView(viewParent);
 		}
+		isDrawing = false;
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
     
     <SurfaceView
@@ -11,6 +11,13 @@
         android:visibility="visible" >
     </SurfaceView>
     
+    <View 
+        android:alpha="0.7"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/mask_gradient"
+        />
+    
     <RelativeLayout 
         android:id="@+id/textsParent"
         android:layout_width="match_parent"
@@ -18,11 +25,19 @@
         >
     </RelativeLayout>
     
+     <ImageView 
+        android:alpha="0.6"
+        android:id="@+id/id_monocle_minus"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_minus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
     <ImageView 
         android:alpha="0.6"
-        android:id="@+id/id_monocle"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/add_minus"
+        android:id="@+id/id_monocle_add"
+        android:layout_above="@id/id_monocle_minus"
+        android:background="@drawable/bg_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />

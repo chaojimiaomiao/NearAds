@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ public class TextFactory {
     public ArrayList<ViewWithDegree> setAds(ArrayList<Ad> ads) {
         this.adList = ads;
         Collections.sort(adList, distanceComparator);//按距离排过序的ad
-        ArrayList<ViewWithDegree> list = generateText();
+        ArrayList<ViewWithDegree> list = generateText1();
         return list;
     }
     
@@ -54,6 +55,45 @@ public class TextFactory {
 		for (int i = 0; i < lists.size(); i++) {
 			
 		}
+	}
+    private ArrayList<ViewWithDegree> generateText1() {
+    	ArrayList<ViewWithDegree> dTextViews = new ArrayList<ViewWithDegree>();
+        for (int i=0; i<adList.size(); i++) {
+        	final Ad detail = adList.get(i);
+        	final LinearLayout linearLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.item_tag, null);
+        	TextView distanceView = (TextView) linearLayout.findViewById(R.id.id_ad_distance);
+        	String string = String.valueOf((int)detail.getDistance() + "米");
+        	distanceView.setText(string);
+            linearLayout.setOnTouchListener(new View.OnTouchListener() {
+				
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					linearLayout.findViewById(R.id.id_bg).setBackgroundResource(R.drawable.sign_green_click);
+					String location = detail.getValueByKey("具体地点");
+					String title = detail.getValueByKey(EDATAKEYS.EDATAKEYS_TITLE);
+					View view = LayoutInflater.from(context).inflate(R.layout.content, null);
+					((TextView)view.findViewById(R.id.id_adress)).setText("地址：" + location);
+					((TextView)view.findViewById(R.id.id_content)).setText("标题：" + title);
+					Toast toast = new Toast(context);
+					toast.setDuration(Toast.LENGTH_LONG);
+					toast.setGravity(Gravity.CENTER, 0, -40);
+					toast.setView(view);
+					toast.show();
+					return false;
+				}
+            });
+        	ViewWithDegree viewWithDegree = new ViewWithDegree();
+            viewWithDegree.degree = detail.getDegree();
+            viewWithDegree.view = (View) linearLayout;
+            viewWithDegree.topMargin = getTopMargin(detail.getDistance());//.................detail.getTopMargin();
+            dTextViews.add(viewWithDegree);
+        }
+        return dTextViews;
+    }
+    private int getTopMargin(double distance) {
+		int maxHeight = (int)TextActivity.dHeight - 20;
+		int topMargin = maxHeight - (int)(maxHeight * distance /3000);
+		return topMargin;
 	}
     //已排序过的adlist
     private ArrayList<ViewWithDegree> generateText() {

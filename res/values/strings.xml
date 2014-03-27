@@ -4,5 +4,6 @@
     <string name="app_name">NearAds</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="detail"><u>详情>></u></string>
 
 </resources>
