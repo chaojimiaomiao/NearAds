@@ -10,21 +10,17 @@ import java.util.Comparator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TextFactory {
-    private ArrayList<Integer> distanceList;
     private ArrayList<Ad> adList;
     //private DisComparator disComparator;
     private Context context;
@@ -56,6 +52,8 @@ public class TextFactory {
 			
 		}
 	}
+    
+    //已排序过的adlist
     private ArrayList<ViewWithDegree> generateText1() {
     	ArrayList<ViewWithDegree> dTextViews = new ArrayList<ViewWithDegree>();
         for (int i=0; i<adList.size(); i++) {
@@ -74,160 +72,38 @@ public class TextFactory {
 					View view = LayoutInflater.from(context).inflate(R.layout.content, null);
 					((TextView)view.findViewById(R.id.id_adress)).setText("地址：" + location);
 					((TextView)view.findViewById(R.id.id_content)).setText("标题：" + title);
-					Toast toast = new Toast(context);
+					/*Toast toast = new Toast(context);
 					toast.setDuration(Toast.LENGTH_LONG);
 					toast.setGravity(Gravity.CENTER, 0, -40);
 					toast.setView(view);
-					toast.show();
+					toast.show();*/
+					PopupWindow popupWindow = new PopupWindow(view, LayoutParams.WRAP_CONTENT,  
+				            LayoutParams.WRAP_CONTENT);
+					popupWindow.setBackgroundDrawable(new BitmapDrawable());
+					popupWindow.setOutsideTouchable(true);
+					popupWindow.showAtLocation(v, Gravity.CENTER, 0, -40);
 					return false;
 				}
             });
         	ViewWithDegree viewWithDegree = new ViewWithDegree();
             viewWithDegree.degree = detail.getDegree();
             viewWithDegree.view = (View) linearLayout;
-            viewWithDegree.topMargin = getTopMargin(detail.getDistance());//.................detail.getTopMargin();
+            viewWithDegree.topMargin = getTopMargin(detail.getDistance(), 3000);//.................detail.getTopMargin();
             dTextViews.add(viewWithDegree);
         }
         return dTextViews;
     }
-    private int getTopMargin(double distance) {
+/*    public void resetSize(LinearLayout linearLayout) {
+		ImageView imageView = (ImageView)linearLayout.findViewById(R.id.id_bg);
+		int width = imageView.getWidth();
+		int height = imageView.getHeight();
+		imageView.
+	}*/
+    public int getTopMargin(double distance, int maxDis) {
 		int maxHeight = (int)TextActivity.dHeight - 20;
-		int topMargin = maxHeight - (int)(maxHeight * distance /3000);
+		int topMargin = maxHeight - (int)(maxHeight * distance /maxDis);//
 		return topMargin;
 	}
-    //已排序过的adlist
-    private ArrayList<ViewWithDegree> generateText() {
-        ArrayList<ViewWithDegree> dTextViews = new ArrayList<ViewWithDegree>();
-        for (int i=0; i<adList.size(); i++) {
-        	final Ad detail = adList.get(i);
-        	final LinearLayout linearLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.item_textview, null);
-        	TextView distanceView = (TextView) linearLayout.findViewById(R.id.id_ad_distance);
-        	TextView textView = (TextView)linearLayout.findViewById(R.id.id_ad_title);
-        	linearLayout.setOnTouchListener(new View.OnTouchListener() {
-				
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					LinearLayout locationHintView = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.popup_window, null);
-					String location = detail.getValueByKey("具体地点");
-					if (location == null) {
-						location = "";
-					}
-					//Toast.makeText(context, "具体地点：" + location, Toast.LENGTH_SHORT).show();
-					((TextView)locationHintView.findViewById(R.id.id_pop_distance)).setText("具体地点：" + location);
-					PopupWindow popupWindow = new PopupWindow(locationHintView, LayoutParams.WRAP_CONTENT,  
-				            LayoutParams.WRAP_CONTENT);
-					//popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, 100, 100);
-					popupWindow.setBackgroundDrawable(new BitmapDrawable());
-					popupWindow.setOutsideTouchable(true); 
-					popupWindow.showAsDropDown(v);
-					return false;
-				}
-			});
-        	
-        	//判断linearlayout的背景框,超过1500白线条,低于则黑线条
-        	//判断textColor同上
-        	//判断text的background，则要每隔500判断一个
-        	//judgeTextColor(linearLayout, textView, detail.getDistance());
-        	String string = String.valueOf((int)detail.getDistance() + "米");
-        	distanceView.setText(string);
-        	setTextColor(textView, detail.getDistance());
-            textView.setPadding(10, 10, 10, 10);
-            textView.setText(detail.getValueByKey(EDATAKEYS.EDATAKEYS_TITLE));
-            textView.setMaxWidth(260);
-            if (textView.getLineCount() > 3) {
-				textView.setMaxWidth(320);
-				textView.setMaxLines(4);
-			}
-            //textView.measure(MeasureSpec., heightMeasureSpec)
-            ViewWithDegree viewWithDegree = new ViewWithDegree();
-            viewWithDegree.degree = detail.getDegree();//calculateDegree(adList.get(i));
-            viewWithDegree.textView = textView;
-            viewWithDegree.view = (View) linearLayout;
-            viewWithDegree.topMargin = detail.getTopMargin();
-            dTextViews.add(viewWithDegree);
-        }
-        return dTextViews;
-    }
-    
-    private void setTextColor(TextView textView, double distance) {
-		int r=89, g=168, b=66, a=240;//g168  a远的淡k越大越小
-		double k = distance/3000 + 1;
-		a = (int) (a - k * 20); if (a >255) { a = 255;}
-		r= (int) (r * k);
-		b= (int) (b * k);
-		textView.setBackgroundColor(Color.argb(a, r, g, b));
-		textView.setTextColor(context.getResources().getColor(R.color.black));
-	}
-    
-    private void judgeTextColor(LinearLayout linearLayout, TextView textView, double distance) {
-    	linearLayout.setBackgroundResource(R.drawable.white_text_bg);
-    	textView.setTextColor(context.getResources().getColor(R.color.white));
-    	if (distance <= 500) {
-    		textView.setBackgroundColor(0xe0111111);//context.getResources().getColor(R.color.d500)
-    		return;
-        } else if (distance <= 800) {
-        	textView.setBackgroundColor(0xe0181818);
-        	return;
-		} else if (distance <= 1000) {
-        	textView.setBackgroundColor(0xe0222222);
-        	return;
-        } else if (distance <= 1200) {
-        	textView.setBackgroundColor(0xe0292929);
-        	return;
-		} else if (distance <= 1500) {
-        	textView.setBackgroundColor(0xe0333333);
-        	return;
-        } else if (distance <= 1800) {
-        	textView.setBackgroundColor(0xe0393939);
-        	return;
-        }
-    	linearLayout.setBackgroundResource(R.drawable.black_text_bg);
-    	textView.setTextColor(context.getResources().getColor(R.color.black));
-    	if (distance <= 2000) {
-    		textView.setBackgroundColor(0xe0444444);
-    		return;
-        } else if (distance <= 2300) {
-        	textView.setBackgroundColor(0xe0484848);
-        	return;
-        } else if (distance <= 2500) {
-        	textView.setBackgroundColor(0xe0515151);
-        	return;
-        } else {
-        	textView.setBackgroundColor(0xe0555555);
-        	return;
-        }
-	}
-/*    private double calculateDegree(Ad ad) {
-    	double adLat = Double.parseDouble(ad.getValueByKey(EDATAKEYS.EDATAKEYS_LAT));
-		double adLon = Double.parseDouble(ad.getValueByKey(EDATAKEYS.EDATAKEYS_LON));
-		double degree = Math.atan2(adLon - SplashCover.getLng(), adLat - SplashCover.getLat()) * 180 / Math.PI;
-		//分三种情况
-		double adDegree;
-		if (degree <= 0) {
-			adDegree = 90 + Math.abs(degree);
-		} else if (degree <= 90 && degree > 0) {
-			adDegree = 90 - degree;
-		} else {
-			adDegree = 270 + (180 - degree);
-		}
-		return adDegree;//与北方的夹角,和传感器一致
-	}
-    */
-    private int colorResource(double distance) {
-        if (distance <= 500) {
-            return context.getResources().getColor(R.color.d500);
-        } else if (distance <= 1000) {
-            return context.getResources().getColor(R.color.d1000);
-        } else if (distance <= 1500) {
-            return context.getResources().getColor(R.color.d1500);
-        } else if (distance <= 2000) {
-            return context.getResources().getColor(R.color.d2000);
-        } else if (distance <= 2500) {
-            return context.getResources().getColor(R.color.d2500);
-        } else {
-            return context.getResources().getColor(R.color.d3000); 
-        }
-    }
     
     static Comparator<Ad> distanceComparator = new Comparator<Ad>() {
 
@@ -241,20 +117,4 @@ public class TextFactory {
 			return 0;
 		}
 	};
-    /*
-    private class DisComparator implements Comparator<Ad> {
-
-        @Override
-        public int compare(Ad lhs, Ad rhs) {
-            double dis1 = lhs.getDistance();
-            double dis2 = rhs.getDistance();
-            if (dis1 == dis2) {
-                return 0;
-            } else if (dis1 > dis2) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-    }*/
 }

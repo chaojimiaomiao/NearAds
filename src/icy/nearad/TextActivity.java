@@ -112,39 +112,6 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 		drawTexts(lastDirection);
 	}
 	
-	private void setListener(View monocle) {
-		monocle.findViewById(R.id.id_dis1000).setOnClickListener(clickListener);
-		monocle.findViewById(R.id.id_dis2000).setOnClickListener(clickListener);
-		monocle.findViewById(R.id.id_dis3000).setOnClickListener(clickListener);
-		monocle.findViewById(R.id.id_dis5000).setOnClickListener(clickListener);
-		//monocle.findViewById(R.id.id_dis10000).setOnClickListener(clickListener);
-	}
-
-	View.OnClickListener clickListener = new View.OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			((TextView)v).setTextColor(getResources().getColor(R.color.orange));
-			if (window != null && window.isShowing()) {
-				window.dismiss();
-			}
-			switch (v.getId()) {
-			case R.id.id_dis1000:
-				refreshView(1000);
-				break;
-			case R.id.id_dis2000:
-				refreshView(2000);
-				break;
-			case R.id.id_dis3000:
-				refreshView(3000);
-				break;
-			case R.id.id_dis5000:
-				refreshView(5000);
-				break;
-			}
-		}
-	};
-	
 	@Override  
     protected void onPause() {
         super.onPause();  
@@ -173,7 +140,7 @@ public class TextActivity extends Activity implements SurfaceHolder.Callback, Se
 			View viewParent = views.get(i);
 			double delta = degree - nowDirect;
 			LayoutParams relativeParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			relativeParams.topMargin = marginList.get(i);
+			relativeParams.topMargin = factory.getTopMargin(adList.get(i).getDistance(), nowMaxDistance);// marginList.get(i) * (nowMaxDistance/1000);//!!!!
 			if (delta >=0 && delta <= coverDegree) {//反一下
 				relativeParams.leftMargin = (int)(dWidth/2 + dWidth/2 * Math.abs(delta)/coverDegree + Math.random()*100 - 50);
 				
